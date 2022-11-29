@@ -12,10 +12,13 @@ import { materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
 import dbConnect from '../../lib/dbConnect';
 import Note from '../../models/Note';
+import { mutate } from 'swr';
+import useNoteList from '../../hooks/useNoteList';
 
 const NotePage = ({ note }: any) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const { notes } = useNoteList();
 
   const onDeleteNote = async () => {
     try {
@@ -26,6 +29,8 @@ const NotePage = ({ note }: any) => {
     } catch (e: any) {
       console.error(e);
     }
+    const options = { optimisticData: notes, rollbackOnError: true };
+    mutate('/api/notes', notes, options);
   };
   return (
     <>

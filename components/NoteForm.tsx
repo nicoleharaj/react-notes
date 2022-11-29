@@ -1,23 +1,70 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, useRef, useState } from 'react';
-import { NoteFormProps } from '../utils/types';
+import { mutate } from 'swr';
+import useNoteList from '../hooks/useNoteList';
+import { NoteFormProps, NoteProps } from '../utils/types';
 import Button from './Button';
 
-const NoteForm = ({ onSubmit, title = '', markdown = '' }: NoteFormProps) => {
+const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
+  const { notes } = useNoteList();
+  const contentType = 'application/json';
+
+  const onUpdateNote = async (data: any) => {
+    const { id } = router.query;
+    try {
+      const note = await fetch(`/api/notes/${id}`, {
+        method: 'PUT',
+        headers: {
+          Accept: contentType,
+          'Content-Type': contentType,
+        },
+        body: JSON.stringify({ ...data })
+      }).then((res) => {
+        return res.json();
+      });
+
+      mutate(`api/notes/${id}`, note, false);
+      router.push(`/${id}`);
+      return note;
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
+  const onCreateNote = async (data: any) => {
+    try {
+      const note = await fetch('/api/notes', {
+        method: 'POST',
+        headers: {
+          Accept: contentType,
+          'Content-Type': contentType,
+        },
+        body: JSON.stringify({ ...data })
+      }).then((res) => {
+        return res.json();
+      });
+      router.push(`/${note._id}`);
+
+      return note;
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    onSubmit({
+    const data = {
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value
-    });
+    };
+    forNewNote ? onCreateNote(data) : onUpdateNote(data);
 
-    router.replace('/');
+    const options = { optimisticData: notes, rollbackOnError: true };
+    mutate('/api/notes', notes, options);
+
   };
 
   return (

@@ -8,7 +8,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { NoteProps } from '../utils/types';
 import useNoteList from '../hooks/useNoteList';
 import { CgSearch } from 'react-icons/cg';
-import useSWR, { Key, Fetcher } from 'swr';
 
 const NoteCard = ({ _id, title, markdown }: NoteProps) => {
   const plain: string = removeMd(markdown);
@@ -23,17 +22,7 @@ const Sidebar = () => {
   const [title, setTitle] = useState('');
   const windowSize = useRef<Number>();
   const [expandMenu, setExpandMenu] = useState(false);
-
-  const getNotes = async () => {
-    const res = await fetch('/api/notes', {
-      method: 'GET',
-    }).then((res) => {
-      return res.json();
-    });
-    return res;
-  };
-
-  const { data: notes } = useSWR<NoteProps[]>('/api/notes', getNotes);
+  const { notes, isLoading, isError } = useNoteList();
 
   const filteredNotes = useMemo(() => {
     return notes?.filter(note => {
@@ -83,13 +72,14 @@ const Sidebar = () => {
         </form>
         <div className='mt-6 flex flex-col gap-2 grow'>
           {
-            !notes ? <div>Loading... </div> :
-              filteredNotes ?
-                filteredNotes.reverse().map(note => (
-                  <div key={note._id} className='bg-white cursor-pointer rounded border border-zinc-300 transition duration-300 ease-in-expo hover:bg-zinc-100 hover:shadow-inner dark:bg-zinc-700 dark:border-zinc-600 dark:hover:bg-zinc-600' onClick={clickResize}>
-                    <NoteCard _id={note._id} title={note.title} markdown={note.markdown} />
-                  </div>
-                )) : null
+            isError ? <div> An error has occurred while fetching notes </div> :
+              isLoading ? <div>Loading... </div> :
+                filteredNotes ?
+                  filteredNotes.reverse().map(note => (
+                    <div key={note._id} className='bg-white cursor-pointer rounded border border-zinc-300 transition duration-300 ease-in-expo hover:bg-zinc-100 hover:shadow-inner dark:bg-zinc-700 dark:border-zinc-600 dark:hover:bg-zinc-600' onClick={clickResize}>
+                      <NoteCard _id={note._id} title={note.title} markdown={note.markdown} />
+                    </div>
+                  )) : null
           }
         </div>
         <div className='border-t border-zinc-300 mt-5 pt-5 text-2xl dark:border-zinc-600 xl:mt-0'>

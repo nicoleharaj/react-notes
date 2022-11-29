@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       try {
         const allNotes: NoteProps[] = await Note.find({});
-        return res.status(200).json(allNotes);
+        res.status(200).json(allNotes);
       } catch (e: any) {
         res.status(400).json({ success: false });
       }
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       try {
         const note: NoteProps = await Note.create(req.body);
-        return res.status(201).json(note);
+        res.status(201).json(note);
       } catch (e: any) {
         res.status(400).json({ success: false });
       }

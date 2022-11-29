@@ -30,7 +30,7 @@ export type EditNoteProps = {
 };
 
 export type NoteFormProps = {
-  onSubmit: (data: NoteData) => void;
+  forNewNote: boolean;
 } & Partial<NoteData>;
 
 export type NewNoteProps = {
