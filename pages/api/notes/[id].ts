@@ -5,7 +5,7 @@ import { NoteProps } from '../../../utils/types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
-    query: { _id },
+    query: { id },
     method,
   } = req;
 
@@ -14,13 +14,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     case 'GET':
       try {
-        const note: NoteProps | null = await Note.findById(_id);
+        const note: NoteProps | null = await Note.findById(id);
         if (!note) {
           return res.status(400).json({ success: false });
         }
-        res.status(200).json(note);
+        return res.status(200).json(note);
       } catch (e: any) {
-        console.error(e);
+        res.status(400).json({ success: false });
+      }
+      break;
+    case 'PUT':
+      try {
+        const note = await Note.findByIdAndUpdate(id, req.body, {
+          new: true,
+          runValidators: true,
+        });
+        if (!note) {
+          return res.status(400).json({ success: false });
+        }
+        res.status(400).json(note);
+      } catch (e: any) {
+        res.status(400).json({ success: false });
+      }
+      break;
+
+    case 'DELETE':
+      try {
+        const deletedNote = await Note.deleteOne({ _id: id });
+        res.status(200).json(deletedNote);
+      } catch (e: any) {
+        res.status(400).json({ success: false });
       }
       break;
   }

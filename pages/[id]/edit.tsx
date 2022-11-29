@@ -1,34 +1,29 @@
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 import { useRouter } from 'next/router';
 import NoteForm from '../../components/NoteForm';
-import axiosInstance from '../../utils/axiosInstance';
-
-export async function getStaticPaths() {
-  const res = await fetch(`${process.env.API_URL}/notes`);
-  const notes = await res.json();
-
-  const paths = notes.map((note: any) => ({
-    params: { id: note.id },
-  }));
-
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params }: Params) {
-  const res = await fetch(`${process.env.API_URL}/notes/${params.id}`);
-  const note = await res.json();
-
-  return { props: { note } };
-}
+import dbConnect from '../../lib/dbConnect';
+import Note from '../../models/Note';
 
 const Edit = ({ note }: any) => {
   const router = useRouter();
+  const contentType = 'application/json';
 
-  const onUpdateNote = ({ ...data }) => {
-    axiosInstance.put(`/notes/${note.id}`, { ...data }).then((res) => {
-      const data = res.data;
-      router.replace(`/${data.id}`);
-    });
+  const onUpdateNote = async ({ ...data }) => {
+    try {
+      await fetch(`/api/notes/${note._id}`, {
+        method: 'PUT',
+        headers: {
+          Accept: contentType,
+          'Content-Type': contentType,
+        },
+        body: JSON.stringify({ ...data })
+      }).then((res) => {
+        router.push(`/${note._id}`);
+        return res.json();
+      });
+    } catch (e: any) {
+      console.error(e);
+    }
   };
 
   return (
@@ -40,6 +35,13 @@ const Edit = ({ note }: any) => {
       <NoteForm title={note.title} markdown={note.markdown} onSubmit={onUpdateNote} />
     </div>
   );
+};
+
+export async function getServerSideProps({ params }: Params) {
+  await dbConnect();
+  const note = await Note.findById(params.id).lean();
+  note._id = note._id.toString();
+  return { props: { note } };
 };
 
 export default Edit;
