@@ -1,10 +1,3 @@
-export type Response = {
-  GET?: Function;
-  POST?: Function;
-  PUT?: Function;
-  DELETE?: Function;
-};
-
 export type ButtonProps = {
   children?: React.ReactNode;
   variant?: string; // default, primary, secondary, info, success, warning, danger, dark;
