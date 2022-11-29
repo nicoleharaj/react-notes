@@ -6,24 +6,29 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { CodeProps } from 'react-markdown/lib/ast-to-react';
-import { materialLight, materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import remarkGfm from 'remark-gfm';
-import axiosInstance from '../../utils/axiosInstance';
 import { useRouter } from 'next/router';
 import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
 import dbConnect from '../../lib/dbConnect';
 import Note from '../../models/Note';
+import useNoteList from '../../hooks/useNoteList';
 
 const NotePage = ({ note }: any) => {
-
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
-  const onDeleteNote = () => {
-    axiosInstance.delete(`/notes/${note.id}`);
-    router.back();
+  const onDeleteNote = async () => {
+    try {
+      await fetch(`/api/notes/${note._id}`, {
+        method: 'DELETE',
+      });
+      useNoteList;
+      router.push('/');
+    } catch (e: any) {
+      console.error(e);
+    }
   };
-
   return (
     <>
       <Modal transitionIn={showModal} timeout={300} classNames='modal' onExit={() => setShowModal(!showModal)}>
@@ -41,7 +46,7 @@ const NotePage = ({ note }: any) => {
         <header className='flex justify-between mb-1'>
           <h1 className='text-2xl font-semibold text-zinc-900 dark:text-white'>{note.title}</h1>
           <div className='flex gap-1'>
-            <Link href={`/${note.id}/edit`}><Button variant='outline-primary'><BsFillPencilFill /></Button></Link>
+            <Link href={'/[id]/edit'} as={`/${note._id}/edit`}><Button variant='outline-primary'><BsFillPencilFill /></Button></Link>
             <Button variant='outline-danger' onClick={() => setShowModal(!showModal)}><BsFillTrashFill /></Button>
           </div>
         </header>
