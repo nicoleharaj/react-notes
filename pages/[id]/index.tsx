@@ -1,18 +1,17 @@
-import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
-import Link from 'next/link';
 import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
+import { CodeProps } from 'react-markdown/lib/ast-to-react';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { CodeProps } from 'react-markdown/lib/ast-to-react';
-import { materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import remarkGfm from 'remark-gfm';
-import { useRouter } from 'next/router';
+import ReactMarkdown from 'react-markdown';
+import { PrismAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
 import dbConnect from '../../lib/dbConnect';
 import Note from '../../models/Note';
-import useNoteList from '../../hooks/useNoteList';
 
 const NotePage = ({ note }: any) => {
   const [showModal, setShowModal] = useState(false);
@@ -23,7 +22,6 @@ const NotePage = ({ note }: any) => {
       await fetch(`/api/notes/${note._id}`, {
         method: 'DELETE',
       });
-      useNoteList;
       router.push('/');
     } catch (e: any) {
       console.error(e);
