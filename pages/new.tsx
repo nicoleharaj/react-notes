@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import NoteForm from '../components/NoteForm';
-import axiosInstance from '../utils/axiosInstance';
 
 const NewNote = () => {
   const router = useRouter();
@@ -8,7 +7,7 @@ const NewNote = () => {
 
   const onCreateNote = async ({ ...data }) => {
     try {
-      await fetch('/api/notes', {
+      const note = await fetch('/api/notes', {
         method: 'POST',
         headers: {
           Accept: contentType,
@@ -16,9 +15,9 @@ const NewNote = () => {
         },
         body: JSON.stringify({ ...data })
       }).then((res) => {
-        router.replace(`/${data._id}`);
         return res.json();
       });
+      router.push(`/${note._id}`);
     } catch (e: any) {
       console.error(e);
     }
