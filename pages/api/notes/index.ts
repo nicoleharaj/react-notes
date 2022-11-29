@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'POST':
       try {
         const note: NoteProps = await Note.create(req.body);
-        res.status(201).json(note);
+        return res.status(201).json(note);
       } catch (e: any) {
         res.status(400).json({ success: false });
       }
