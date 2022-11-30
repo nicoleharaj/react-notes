@@ -1,8 +1,6 @@
 import Head from 'next/head';
-import dbConnect from '../lib/dbConnect';
-import Note from '../models/Note';
 
-export default function Home({ notes }: any) {
+export default function Home() {
   return (
     <>
       <Head>
@@ -16,18 +14,4 @@ export default function Home({ notes }: any) {
 
     </>
   );
-}
-
-
-export async function getServerSideProps() {
-  await dbConnect();
-  
-  const res = await Note.find({});
-  const notes = res.map((doc) => {
-    const note = doc.toObject();
-    note._id = note._id.toString();
-    return note;
-  });
-
-  return { props: { notes: notes } };
 }

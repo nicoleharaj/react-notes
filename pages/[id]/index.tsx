@@ -3,16 +3,16 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 import { CodeProps } from 'react-markdown/lib/ast-to-react';
-import Button from '../../components/Button';
-import Modal from '../../components/Modal';
 import remarkGfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
 import { PrismAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
+import { mutate } from 'swr';
 import dbConnect from '../../lib/dbConnect';
 import Note from '../../models/Note';
-import { mutate } from 'swr';
+import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 import useNoteList from '../../hooks/useNoteList';
 
 const NotePage = ({ note }: any) => {
@@ -53,14 +53,6 @@ const NotePage = ({ note }: any) => {
             <Button variant='outline-danger' onClick={() => setShowModal(!showModal)}><BsFillTrashFill /></Button>
           </div>
         </header>
-        {/* {
-          note.tags.length > 0 && (
-            <div className="flex gap-2 justify-start">
-              {note.tags.map(tag => (
-                <Tag key={tag.id}>{tag.label}</Tag>
-              ))}
-            </div>)
-        } */}
 
         <article className="mt-6 mx-auto prose prose-pre:w-70 prose-headings:mt-5 prose-headings:mb-3 md:prose-lg dark:prose-invert">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
@@ -96,8 +88,12 @@ const NotePage = ({ note }: any) => {
 export async function getServerSideProps({ params }: Params) {
   await dbConnect();
   const note = await Note.findById(params.id).lean();
-  note._id = note._id.toString();
-  return { props: { note } };
+
+  return {
+    props: {
+      note: JSON.parse(JSON.stringify(note)),
+    }
+  };
 };
 
 export default NotePage;

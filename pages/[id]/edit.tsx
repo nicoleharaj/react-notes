@@ -10,7 +10,7 @@ const Edit = ({ note }: any) => {
         <h1 className='text-2xl font-semibold'>Edit note</h1>
       </header>
 
-      <NoteForm title={note.title} markdown={note.markdown} forNewNote={false} />
+      <NoteForm title={note.title} markdown={note.markdown} tags={note.tags} forNewNote={false} />
     </div>
   );
 };
@@ -18,8 +18,11 @@ const Edit = ({ note }: any) => {
 export async function getServerSideProps({ params }: Params) {
   await dbConnect();
   const note = await Note.findById(params.id).lean();
-  note._id = note._id.toString();
-  return { props: { note } };
+  return {
+    props: {
+      note: JSON.parse(JSON.stringify(note)),
+    }
+  };
 };
 
 export default Edit;

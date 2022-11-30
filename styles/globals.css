@@ -150,7 +150,7 @@
 
 .toggle-bg::after {
   content: '';
-  @apply absolute top-0.5 bg-amber-300 border border-amber-300 transition-transform duration-300 ease-in-expo shadow rounded-full h-5 w-5;
+  @apply absolute top-0.5 bg-amber-300 border border-amber-300 transition-transform shadow rounded-full h-5 w-5;
 }
 
 input:checked + .toggle-bg::after {

@@ -10,7 +10,7 @@ const ThemeToggler = () => {
   useTheme();
 
   return (
-    <label htmlFor="dark-toggler" className="relative flex items-center justify-start cursor-pointer gap-2 w-fit text-md transition duration-300 ease-in-expo">
+    <label htmlFor="dark-toggler" className="relative flex items-center justify-start cursor-pointer gap-2 w-fit text-md transition ease-in-expo">
       <FiSun className='text-zinc-900 dark:text-zinc-500' />
       <input type="checkbox" id="dark-toggler" className="sr-only" onClick={toggleTheme} defaultChecked={theme === 'dark'} />
       <div className="toggle-bg bg-zinc-300 h-4 w-9 rounded-full transition-colors"></div>

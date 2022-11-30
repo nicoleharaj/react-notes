@@ -1,8 +1,13 @@
 export type ButtonProps = {
   children?: React.ReactNode;
-  variant?: string; // default, primary, secondary, info, success, warning, danger, dark;
+  variant?: string; // [outline-] default, primary, secondary, info, success, warning, danger, dark;
   disabled?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export type BadgeProps = {
+  badgeKey?: string;
+  children?: React.ReactNode;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 export type NoteProps = {
   _id: string;
@@ -12,6 +17,21 @@ export type NoteList = {
   notes: NoteProps[];
 };
 
+export type TagProps = {
+  _id: string;
+  label: string;
+};
+
+export type NoteData = {
+  title: string;
+  markdown: string;
+  tags: TagProps[];
+};
+
+export type NoteFormProps = {
+  forNewNote: boolean;
+} & Partial<NoteData>;
+
 export type ModalProps = {
   children?: React.ReactNode;
   transitionIn: boolean;
@@ -19,20 +39,3 @@ export type ModalProps = {
   classNames?: string;
   onExit: () => void;
 } & React.HTMLAttributes<HTMLDivElement>;
-
-export type NoteData = {
-  title: string;
-  markdown: string;
-};
-
-export type EditNoteProps = {
-  onSubmit: (id: string, data: NoteData) => void;
-};
-
-export type NoteFormProps = {
-  forNewNote: boolean;
-} & Partial<NoteData>;
-
-export type NewNoteProps = {
-  onSubmit: (data: NoteData) => void;
-};
