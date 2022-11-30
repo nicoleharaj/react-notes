@@ -6,37 +6,28 @@ import { RiCloseLine } from 'react-icons/ri';
 import removeMd from 'remove-markdown';
 import ThemeToggler from './ThemeToggler';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { NoteProps, TagProps } from '../utils/types';
+import { NoteProps } from '../utils/types';
 import useNoteList from '../hooks/useNoteList';
 import { CgSearch } from 'react-icons/cg';
 import Badge from './Badge';
 import Modal from './Modal';
-import useTagsList from '../hooks/useTagsList';
 import { mutate } from 'swr';
 
-const NoteCard = ({ _id, title, markdown, tags }: NoteProps) => {
+const NoteCard = ({ _id, title, markdown }: NoteProps) => {
   const plain: string = removeMd(markdown);
 
   return <Link href={`/${_id}`} className='flex flex-col justify-center gap-1 p-3'>
     <h2 className='text-lg truncate'>{title}</h2>
-    <div className='flex flex-row gap-2 justify-start'>
-      {tags?.map(tag => (
-        <Badge key={tag._id}>{tag.label}</Badge>
-      ))}
-    </div>
     <p className='line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400'>{plain}</p>
   </Link>;
 };
 
 const Sidebar = () => {
-  const [selectedTags, setSelectedTags] = useState<TagProps[]>([]);
   const [title, setTitle] = useState('');
   const windowSize = useRef<Number>();
   const [expandMenu, setExpandMenu] = useState(false);
   const { notes, isLoading, isError } = useNoteList();
-  const { availableTags } = useTagsList();
   const [showModal, setShowModal] = useState(false);
-  const contentType = 'application/json';
 
 
   const filteredNotes = useMemo(() => {
@@ -62,47 +53,8 @@ const Sidebar = () => {
     setExpandMenu(false);
   };
 
-  const onUpdateTag = async ({ ...data }) => {
-    try {
-      const tag = await fetch(`/api/tags/${data._id}`, {
-        method: 'PUT',
-        headers: {
-          Accept: contentType,
-          'Content-Type': contentType,
-        },
-        body: JSON.stringify({ ...data })
-      }).then((res) => {
-        return res.json();
-      });
-      mutate(`api/tags/${data._id}`, tag, false);
-
-      return tag;
-    } catch (e: any) {
-      console.error(e);
-    }
-  };
-
-  const onDeleteTag = (id: string) => {
-
-  };
-
   return (
     <>
-      <Modal transitionIn={showModal} onExit={() => setShowModal(!showModal)} classNames='modal' className='max-h-90 w-100 overflow-y-auto'>
-        <div className="flex justify-between items-center font-bold text-2xl">
-          <h2>Edit tags</h2>
-          <Button variant='outline-secondary' onClick={() => setShowModal(!showModal)}><RiCloseLine /></Button>
-        </div>
-
-        <form className='mt-2 y-2 flex flex-col items-center overflow-y-auto'>
-          {availableTags?.map(tag => (
-            <div key={tag._id} className='flex justify-between items-center gap-5 p-1'>
-              <input type='text' value={tag.label} onChange={e => onUpdateTag({ _id: tag._id, label: e.target.value })} className='transition-colors border-gray-300 rounded focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600' />
-              <Button variant='danger' onClick={() => onDeleteTag(tag._id)}><BsFillTrashFill /></Button>
-            </div>
-          ))}
-        </form>
-      </Modal>
       <div className='p-6 pb-0 h-full flex flex-col text-zinc-900 dark:text-white'>
         <header className=' flex justify-between'>
           <h1 className='text-2xl font-semibold ease-in-expo'>Notes</h1>
@@ -137,7 +89,7 @@ const Sidebar = () => {
                   filteredNotes ?
                     filteredNotes.reverse().map(note => (
                       <div key={note._id} className='bg-white cursor-pointer rounded border border-zinc-300 transition hover:bg-zinc-100 hover:shadow-inner dark:bg-zinc-700 dark:border-zinc-600 dark:hover:bg-zinc-600'>
-                        <NoteCard _id={note._id} title={note.title} markdown={note.markdown} tags={note.tags} />
+                        <NoteCard _id={note._id} title={note.title} markdown={note.markdown} />
                       </div>
                     )) : null
             }

@@ -2,19 +2,16 @@ import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { mutate } from 'swr';
 import useNoteList from '../hooks/useNoteList';
-import { NoteFormProps, TagProps } from '../utils/types';
+import { NoteFormProps } from '../utils/types';
 import Button from './Button';
 import CreatableReactSelect from 'react-select/creatable';
-import useTagsList from '../hooks/useTagsList';
 
-const NoteForm = ({ title = '', markdown = '', tags = [], forNewNote = true }: NoteFormProps) => {
+const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
   const { notes } = useNoteList();
-  const { availableTags } = useTagsList();
   const contentType = 'application/json';
-  const [selectedTags, setSelectedTags] = useState<TagProps[]>(tags);
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -38,7 +35,6 @@ const NoteForm = ({ title = '', markdown = '', tags = [], forNewNote = true }: N
         return res.json();
       });
       router.push(`/${note._id}`);
-
       return note;
     } catch (e: any) {
       console.error(e);
@@ -68,27 +64,12 @@ const NoteForm = ({ title = '', markdown = '', tags = [], forNewNote = true }: N
     }
   };
 
-  const onCreateTag = async (label: string) => {
-    const newTag = await fetch('/api/tags', {
-      method: 'POST',
-      headers: {
-        Accept: contentType,
-        'Content-Type': contentType,
-      },
-      body: JSON.stringify({ label })
-    }).then((res) => {
-      return res.json();
-    });
-    setSelectedTags(prev => [...prev, newTag]);
-    mutate('/api/tags', tags);
-  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const data = {
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
-      tags: selectedTags
     };
 
     forNewNote ? onCreateNote(data) : onUpdateNote(data);
@@ -107,23 +88,6 @@ const NoteForm = ({ title = '', markdown = '', tags = [], forNewNote = true }: N
         </div>
         <div className='grid gap-2 flex-grow'>
           <label htmlFor='tags'>Tags</label>
-          <CreatableReactSelect value={selectedTags?.map(tag => {
-            return { label: tag.label, value: tag._id };
-          })}
-            onCreateOption={onCreateTag}
-            onChange={tags => {
-              setSelectedTags(
-                tags.map(tag => {
-                  return { label: tag.label, _id: tag.value };
-                })
-              );
-            }}
-            options={availableTags?.map(tag => {
-              return { label: tag.label, value: tag._id };
-            })}
-            id='tags'
-            isMulti
-          />
         </div>
       </div>
 

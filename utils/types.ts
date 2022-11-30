@@ -17,15 +17,9 @@ export type NoteList = {
   notes: NoteProps[];
 };
 
-export type TagProps = {
-  _id: string;
-  label: string;
-};
-
 export type NoteData = {
   title: string;
   markdown: string;
-  tags: TagProps[];
 };
 
 export type NoteFormProps = {

@@ -22,7 +22,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect('mongodb://127.0.0.1:27017/notes-app', opts).then((mongoose) => {
+    cached.promise = mongoose.connect('mongodb://127.0.0.1:27017/react-notes', opts).then((mongoose) => {
       return mongoose;
     });
   }
