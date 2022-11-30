@@ -14,6 +14,7 @@ import Note from '../../models/Note';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import useNoteList from '../../hooks/useNoteList';
+import { NOTES_URL } from '../../constants';
 
 const NotePage = ({ note }: any) => {
   const [showModal, setShowModal] = useState(false);
@@ -22,7 +23,7 @@ const NotePage = ({ note }: any) => {
 
   const onDeleteNote = async () => {
     try {
-      await fetch(`/api/notes/${note._id}`, {
+      await fetch(`${NOTES_URL}/${note._id}`, {
         method: 'DELETE',
       });
       router.push('/');
@@ -30,7 +31,7 @@ const NotePage = ({ note }: any) => {
       console.error(e);
     }
     const options = { optimisticData: notes, rollbackOnError: true };
-    mutate('/api/notes', notes, options);
+    mutate(NOTES_URL, notes, options);
   };
   return (
     <>

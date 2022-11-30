@@ -4,6 +4,7 @@ import { mutate } from 'swr';
 import useNoteList from '../hooks/useNoteList';
 import { NoteFormProps } from '../utils/types';
 import Button from './Button';
+import { NOTES_URL } from '../constants';
 import CreatableReactSelect from 'react-select/creatable';
 
 const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProps) => {
@@ -24,7 +25,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
 
   const onCreateNote = async (data: any) => {
     try {
-      const note = await fetch('/api/notes', {
+      const note = await fetch(NOTES_URL, {
         method: 'POST',
         headers: {
           Accept: contentType,
@@ -45,7 +46,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
     const { id } = router.query;
 
     try {
-      const note = await fetch(`/api/notes/${id}`, {
+      const note = await fetch(`${NOTES_URL}/${id}`, {
         method: 'PUT',
         headers: {
           Accept: contentType,
@@ -75,7 +76,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
     forNewNote ? onCreateNote(data) : onUpdateNote(data);
 
     const notesOptions = { optimisticData: notes, rollbackOnError: true };
-    mutate('/api/notes', notes, notesOptions);
+    mutate(NOTES_URL, notes, notesOptions);
 
   };
 

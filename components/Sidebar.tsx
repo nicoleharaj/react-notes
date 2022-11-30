@@ -1,17 +1,13 @@
 import Link from 'next/link';
 import Button from './Button';
 import { HiPencilAlt, HiMenu } from 'react-icons/hi';
-import { BsFillTagsFill, BsFillTrashFill } from 'react-icons/bs';
-import { RiCloseLine } from 'react-icons/ri';
+import { BsFillTagsFill } from 'react-icons/bs';
 import removeMd from 'remove-markdown';
 import ThemeToggler from './ThemeToggler';
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { NoteProps } from '../utils/types';
 import useNoteList from '../hooks/useNoteList';
 import { CgSearch } from 'react-icons/cg';
-import Badge from './Badge';
-import Modal from './Modal';
-import { mutate } from 'swr';
 
 const NoteCard = ({ _id, title, markdown }: NoteProps) => {
   const plain: string = removeMd(markdown);
