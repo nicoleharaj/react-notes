@@ -20,10 +20,12 @@ export type NoteList = {
 export type NoteData = {
   title: string;
   markdown: string;
+  tags: TagProps[];
 };
 
 export type NoteFormProps = {
   forNewNote: boolean;
+  tags: TagProps[];
 } & Partial<NoteData>;
 
 export type ModalProps = {
@@ -33,3 +35,11 @@ export type ModalProps = {
   classNames?: string;
   onExit: () => void;
 } & React.HTMLAttributes<HTMLDivElement>;
+
+export type TagProps = {
+  _id: string;
+} & TagData;
+
+export type TagData = {
+  label: string;
+};

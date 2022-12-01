@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { TagSchema } from './Tag';
 
 const NoteSchema = new mongoose.Schema({
   title: {
@@ -10,6 +11,8 @@ const NoteSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Body cannot be empty.'],
   },
+
+  tags: [TagSchema],
 });
 
 export default mongoose.models.Note || mongoose.model('Note', NoteSchema);

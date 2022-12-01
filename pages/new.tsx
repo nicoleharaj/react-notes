@@ -7,7 +7,7 @@ const NewNote = () => {
         <h1 className='text-2xl font-semibold'>New note</h1>
       </header>
 
-      <NoteForm forNewNote />
+      <NoteForm forNewNote tags={[]} />
 
     </div>
   );

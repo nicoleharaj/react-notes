@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const TagSchema = new mongoose.Schema({
+export const TagSchema = new mongoose.Schema({
   label: {
     type: String,
     required: [true, 'Label cannot be empty.'],

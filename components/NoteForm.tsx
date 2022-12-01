@@ -2,18 +2,20 @@ import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { mutate } from 'swr';
 import useNoteList from '../hooks/useNoteList';
-import { NoteFormProps } from '../utils/types';
+import { NoteFormProps, TagProps } from '../utils/types';
 import Button from './Button';
-import { NOTES_URL } from '../constants';
+import { NOTES_URL, TAGS_URL, CONTENT_TYPE } from '../constants';
 import CreatableReactSelect from 'react-select/creatable';
+import useTagList from '../hooks/useTagList';
 
-const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProps) => {
+const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: NoteFormProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
   const { notes } = useNoteList();
-  const contentType = 'application/json';
   const [hasMounted, setHasMounted] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<TagProps[]>(tags);
+  const { allTags } = useTagList();
 
   useEffect(() => {
     setHasMounted(true);
@@ -28,8 +30,8 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
       const note = await fetch(NOTES_URL, {
         method: 'POST',
         headers: {
-          Accept: contentType,
-          'Content-Type': contentType,
+          Accept: CONTENT_TYPE,
+          'Content-Type': CONTENT_TYPE,
         },
         body: JSON.stringify({ ...data })
       }).then((res) => {
@@ -49,8 +51,8 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
       const note = await fetch(`${NOTES_URL}/${id}`, {
         method: 'PUT',
         headers: {
-          Accept: contentType,
-          'Content-Type': contentType,
+          Accept: CONTENT_TYPE,
+          'Content-Type': CONTENT_TYPE,
         },
         body: JSON.stringify({ ...data })
       }).then((res) => {
@@ -65,12 +67,32 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
     }
   };
 
+  const onCreateTag = async (data: any) => {
+    try {
+      const tag = await fetch(TAGS_URL, {
+        method: 'POST',
+        headers: {
+          Accept: CONTENT_TYPE,
+          'Content-Type': CONTENT_TYPE,
+        },
+        body: JSON.stringify(data)
+      }).then((res) => {
+        return res.json();
+      });
+      setSelectedTags(prev => [...prev, tag]);
+      return tag;
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const data = {
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
+      tags: selectedTags,
     };
 
     forNewNote ? onCreateNote(data) : onUpdateNote(data);
@@ -89,6 +111,19 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true }: NoteFormProp
         </div>
         <div className='grid gap-2 flex-grow'>
           <label htmlFor='tags'>Tags</label>
+          <CreatableReactSelect
+            value={selectedTags.map(tag => { return { label: tag.label, value: tag._id }; })}
+            onChange={tags => setSelectedTags(
+              tags.map(tag => {
+                return { label: tag.label, _id: tag.value };
+              })
+            )}
+            onCreateOption={label => onCreateTag({ label: label })}
+            options={allTags?.map(tag => {
+              return { label: tag.label, value: tag._id };
+            })}
+            isMulti
+          />
         </div>
       </div>
 

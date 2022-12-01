@@ -10,7 +10,7 @@ const Edit = ({ note }: any) => {
         <h1 className='text-2xl font-semibold'>Edit note</h1>
       </header>
 
-      <NoteForm title={note.title} markdown={note.markdown} forNewNote={false} />
+      <NoteForm title={note.title} markdown={note.markdown} tags={note.tags} forNewNote={false} />
     </div>
   );
 };
