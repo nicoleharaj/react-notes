@@ -37,7 +37,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
       }).then((res) => {
         return res.json();
       });
-      router.push(`/${note._id}`);
+      router.push(`/${note.data._id}`);
       return note;
     } catch (e: any) {
       console.error(e);
@@ -61,7 +61,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
 
       mutate(`api/notes/${id}`, note, false);
       router.push(`/${id}`);
-      return note;
+      return note.data;
     } catch (e: any) {
       console.error(e);
     }
@@ -85,7 +85,6 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
       console.error(e);
     }
   };
-
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

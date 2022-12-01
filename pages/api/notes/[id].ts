@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../lib/dbConnect';
 import { Note } from '../../../models/Models';
-import { NoteProps } from '../../../utils/types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -14,11 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     case 'GET':
       try {
-        const note: NoteProps | null = await Note.findById(id);
+        const note = await Note.findById(id).populate('tags');
 
         if (!note) res.status(400).json({ success: false });
 
-        res.status(200).json(note);
+        return res.status(200).json(note);
       } catch (e: any) {
         res.status(400).json({ success: false });
       }

@@ -8,7 +8,7 @@ const getNotes = async () => {
   }).then((res) => {
     return res.json();
   });
-  return res;
+  return res.data;
 };
 
 const useNoteList = () => {

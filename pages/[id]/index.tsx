@@ -88,7 +88,7 @@ const NotePage = ({ note }: any) => {
 
 export async function getServerSideProps({ params }: Params) {
   await dbConnect();
-  const note = await Note.findById(params.id).lean();
+  const note = await Note.findById(params.id).populate('tags').lean();
 
   return {
     props: {
