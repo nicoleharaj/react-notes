@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (!note) res.status(404).json({ success: false });
 
-        return res.status(200).json(note);
+        res.status(200).json({ success: true, data: note });
       } catch (e: any) {
         res.status(400).json({ success: false });
       }
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (!note) res.status(400).json({ success: false });
 
-        res.status(200).json(note);
+        res.status(200).json({ success: true, data: note });
       } catch (e: any) {
         console.error(e);
         res.status(400).json({ success: false });

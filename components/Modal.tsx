@@ -16,7 +16,7 @@ const Modal = ({
   return (
     <CSSTransition nodeRef={modalRef} in={transitionIn} timeout={timeout} classNames={classNames} unmountOnExit>
       <div ref={modalRef} className='left-0 top-0 flex justify-center items-center fixed w-full h-full z-40' {...props}>
-        <div className={`m-auto flex-col gap-4 bg-white rounded-md shadow-lg p-10 z-50 dark:bg-zinc-700` + ' ' + className}>
+        <div className={`m-auto flex-col gap-4 w-1/4 bg-white rounded-md shadow-lg p-10 z-50 dark:bg-zinc-700` + ' ' + className}>
           {children}
         </div>
 

@@ -8,7 +8,7 @@ const getTags = async () => {
   }).then((res) => {
     return res.json();
   });
-  return res;
+  return res.data;
 };
 
 const useTagList = () => {

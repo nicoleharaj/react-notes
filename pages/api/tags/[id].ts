@@ -27,7 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const tag = await Tag.findByIdAndUpdate(id, req.body, {
           new: true,
-          runValidators: true,
         });
 
         if (!tag) res.status(404).json({ success: false });

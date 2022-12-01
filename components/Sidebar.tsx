@@ -96,7 +96,7 @@ const Sidebar = () => {
           <Button variant='outline-secondary' onClick={() => setShowModal(!showModal)}><RiCloseLine /></Button>
         </div>
 
-        <form className='mt-2 y-2 flex flex-col items-center overflow-y-auto'>
+        <form className='mt-2 y-2 flex flex-col items-center'>
           {allTags?.map(tag => (
             <div key={tag._id} className='flex justify-between items-center gap-5 p-1'>
               <input type='text' value={tag.label} onChange={e => onUpdateTag({ _id: tag._id, label: e.target.value })} className='transition-colors border-gray-300 rounded focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600' />

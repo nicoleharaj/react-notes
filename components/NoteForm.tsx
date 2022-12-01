@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { mutate } from 'swr';
 import useNoteList from '../hooks/useNoteList';
-import { NoteFormProps, TagProps } from '../utils/types';
+import { NoteFormProps, NoteProps, TagProps } from '../utils/types';
 import Button from './Button';
 import { NOTES_URL, TAGS_URL, CONTENT_TYPE } from '../constants';
 import CreatableReactSelect from 'react-select/creatable';
@@ -61,7 +61,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
 
       mutate(`api/notes/${id}`, note, false);
       router.push(`/${id}`);
-      return note.data;
+      return note;
     } catch (e: any) {
       console.error(e);
     }
@@ -79,14 +79,45 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
       }).then((res) => {
         return res.json();
       });
-      setSelectedTags(prev => [...prev, tag]);
+      setSelectedTags(prev => [...prev, tag.data]);
       return tag;
     } catch (e: any) {
       console.error(e);
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const onUpdateTagNotes = async (tag: TagProps, currentNote: NoteProps) => {
+    const id = tag._id;
+
+    const currentNotes: string[] = await fetch(`${TAGS_URL}/${id}`, {
+      method: 'GET',
+    }).then((res) => {
+      return res.json();
+    }).then((res) => res.data.notes);
+
+    if (currentNotes.includes(currentNote._id)) return;
+
+    currentNotes.push(currentNote._id);
+
+    try {
+      const updatedTag = await fetch(`${TAGS_URL}/${id}`, {
+        method: 'PUT',
+        headers: {
+          Accept: CONTENT_TYPE,
+          'Content-Type': CONTENT_TYPE,
+        },
+        body: JSON.stringify({ notes: currentNotes })
+      }).then((res) => {
+        return res.json();
+      });
+      mutate(`api/tags/${id}`, allTags, false);
+      return updatedTag;
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const data = {
       title: titleRef.current!.value,
@@ -94,11 +125,17 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
       tags: selectedTags,
     };
 
-    forNewNote ? onCreateNote(data) : onUpdateNote(data);
+    const note = forNewNote ? await onCreateNote(data) : await onUpdateNote(data);
+
+    data.tags.forEach(tag => {
+      onUpdateTagNotes(tag, note.data);
+    });
 
     const notesOptions = { optimisticData: notes, rollbackOnError: true };
     mutate(NOTES_URL, notes, notesOptions);
 
+    const tagsOptions = { optimisticData: allTags, rollbackOnError: true };
+    mutate(TAGS_URL, allTags, tagsOptions);
   };
 
   return (

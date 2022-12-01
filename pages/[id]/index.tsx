@@ -17,6 +17,7 @@ import useNoteList from '../../hooks/useNoteList';
 import { NOTES_URL } from '../../constants';
 
 const NotePage = ({ note }: any) => {
+
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const { notes } = useNoteList();
