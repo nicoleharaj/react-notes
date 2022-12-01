@@ -16,11 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const tag: TagProps | null = await Tag.findById(id);
 
-        if (!tag) res.status(400).json({ success: false });
+        if (!tag) res.status(404).json({ success: false });
 
-        res.status(200).json(tag);
+        res.status(200).json({ success: true, data: tag });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
     case 'PUT':
@@ -30,21 +30,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           runValidators: true,
         });
 
-        if (!tag) res.status(400).json({ success: false });
+        if (!tag) res.status(404).json({ success: false });
 
-        res.status(200).json(tag);
+        res.status(200).json({ success: true, data: tag });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
 
     case 'DELETE':
       try {
         const deletedTag = await Tag.deleteOne({ _id: id });
-        res.status(200).json(deletedTag);
+        res.status(200).json({ success: true, data: deletedTag });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
+    default:
+      res.status(403).json({ success: false });
   }
 }

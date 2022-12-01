@@ -12,20 +12,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       try {
         const allTags: TagProps[] = await Tag.find({});
-        res.status(200).json(allTags);
+        res.status(200).json({ success: true, data: allTags });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
     case 'POST':
       try {
         const tag: TagProps = await Tag.create(req.body);
-        res.status(201).json(tag);
+        res.status(201).json({ success: true, data: tag });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
     default:
-      res.status(400).json({ success: false });
+      res.status(403).json({ success: false });
   }
 }

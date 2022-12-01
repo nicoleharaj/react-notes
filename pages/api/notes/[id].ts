@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const note = await Note.findById(id).populate('tags');
 
-        if (!note) res.status(400).json({ success: false });
+        if (!note) res.status(404).json({ success: false });
 
         return res.status(200).json(note);
       } catch (e: any) {
@@ -46,5 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(400).json({ success: false });
       }
       break;
+    default:
+      res.status(403).json({ success: false });
   }
 }
