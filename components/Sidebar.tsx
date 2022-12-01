@@ -5,13 +5,13 @@ import { RiCloseLine } from 'react-icons/ri';
 import { BsFillTagsFill, BsFillTrashFill } from 'react-icons/bs';
 import removeMd from 'remove-markdown';
 import ThemeToggler from './ThemeToggler';
-import { Key, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { NoteProps } from '../utils/types';
 import useNoteList from '../hooks/useNoteList';
 import { CgSearch } from 'react-icons/cg';
 import Modal from './Modal';
 import { mutate } from 'swr';
-import { CONTENT_TYPE } from '../constants';
+import { CONTENT_TYPE, TAGS_URL } from '../constants';
 import useTagList from '../hooks/useTagList';
 import Badge from './Badge';
 
@@ -29,9 +29,16 @@ const NoteCard = ({ _id, title, markdown, tags }: NoteProps) => {
   </Link>;
 };
 
-const onUpdateTag = async ({ ...data }) => {
-  try {
-    const tag = await fetch(`/api/tags/${data._id}`, {
+const Sidebar = () => {
+  const [title, setTitle] = useState('');
+  const windowSize = useRef<Number>();
+  const [expandMenu, setExpandMenu] = useState(false);
+  const { notes, isLoading, isError } = useNoteList();
+  const [showModal, setShowModal] = useState(false);
+  const { allTags } = useTagList();
+
+  const onUpdateTag = async ({ ...data }) => {
+    const tag = await fetch(`${TAGS_URL}/${data._id}`, {
       method: 'PUT',
       headers: {
         Accept: CONTENT_TYPE,
@@ -41,25 +48,21 @@ const onUpdateTag = async ({ ...data }) => {
     }).then((res) => {
       return res.json();
     });
-    mutate(`api/tags/${data._id}`, tag, false);
 
+    mutate(TAGS_URL, allTags);
     return tag;
-  } catch (e: any) {
-    console.error(e);
-  }
-};
+  };
 
-const onDeleteTag = (id: string) => {
+  const onDeleteTag = async (id: string) => {
+    const res = await fetch(`${TAGS_URL}/${id}`, {
+      method: 'DELETE',
+    }).then((res) => {
+      return res.json();
+    });
 
-};
-
-const Sidebar = () => {
-  const [title, setTitle] = useState('');
-  const windowSize = useRef<Number>();
-  const [expandMenu, setExpandMenu] = useState(false);
-  const { notes, isLoading, isError } = useNoteList();
-  const [showModal, setShowModal] = useState(false);
-  const { allTags } = useTagList();
+    mutate(TAGS_URL, allTags);
+    return res;
+  };
 
 
   const filteredNotes = useMemo(() => {
@@ -87,7 +90,6 @@ const Sidebar = () => {
 
   return (
     <>
-
       <Modal transitionIn={showModal} onExit={() => setShowModal(!showModal)} classNames='modal' className='max-h-90 w-100 overflow-y-auto'>
         <div className="flex justify-between items-center font-bold text-2xl">
           <h2>Edit tags</h2>
@@ -98,7 +100,7 @@ const Sidebar = () => {
           {allTags?.map(tag => (
             <div key={tag._id} className='flex justify-between items-center gap-5 p-1'>
               <input type='text' value={tag.label} onChange={e => onUpdateTag({ _id: tag._id, label: e.target.value })} className='transition-colors border-gray-300 rounded focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600' />
-              <Button variant='danger' onClick={() => onDeleteTag(tag._id)}><BsFillTrashFill /></Button>
+              <Button variant='danger' onClick={() => onDeleteTag(tag._id)} type="button"><BsFillTrashFill /></Button>
             </div>
           ))}
         </form>

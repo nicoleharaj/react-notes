@@ -10,7 +10,7 @@ import { materialDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
 import { mutate } from 'swr';
 import dbConnect from '../../lib/dbConnect';
-import Note from '../../models/Note';
+import { Note } from '../../models/Models';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import useNoteList from '../../hooks/useNoteList';

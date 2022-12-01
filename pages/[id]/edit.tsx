@@ -1,7 +1,7 @@
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 import NoteForm from '../../components/NoteForm';
 import dbConnect from '../../lib/dbConnect';
-import Note from '../../models/Note';
+import { Note } from '../../models/Models';
 
 const Edit = ({ note }: any) => {
   return (

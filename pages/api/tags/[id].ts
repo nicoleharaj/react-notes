@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../lib/dbConnect';
-import Tag from '../../../models/Tag';
+import { Tag } from '../../../models/Models';
 import { TagProps } from '../../../utils/types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
