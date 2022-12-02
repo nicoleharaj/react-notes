@@ -1,17 +1,23 @@
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
+import Head from 'next/head';
 import NoteForm from '../../components/NoteForm';
 import dbConnect from '../../lib/dbConnect';
 import { Note } from '../../models/Models';
 
 const Edit = ({ note }: any) => {
   return (
-    <div className='w-full'>
-      <header className='mb-6'>
-        <h1 className='text-2xl font-semibold'>Edit note</h1>
-      </header>
+    <>
+      <Head>
+        <title>Edit - {note.title} - Notes</title>
+      </Head>
+      <div className='w-full'>
+        <header className='mb-6'>
+          <h1 className='text-2xl font-semibold'>Edit note</h1>
+        </header>
 
-      <NoteForm title={note.title} markdown={note.markdown} tags={note.tags} forNewNote={false} />
-    </div>
+        <NoteForm title={note.title} markdown={note.markdown} tags={note.tags} forNewNote={false} />
+      </div>
+    </>
   );
 };
 

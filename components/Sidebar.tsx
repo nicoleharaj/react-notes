@@ -25,7 +25,7 @@ const NoteCard = ({ _id, title, markdown, tags }: NoteProps) => {
         <Badge key={tag._id}>{tag.label}</Badge>
       ))}
     </div>
-    <p className='line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400'>{plain}</p>
+    <p className='h-4 overflow-hidden whitespace-nowrap text-ellipsis text-sm text-zinc-500 dark:text-zinc-400'>{plain}</p>
   </Link>;
 };
 
@@ -109,9 +109,9 @@ const Sidebar = () => {
         <header className=' flex justify-between'>
           <h1 className='text-2xl font-semibold ease-in-expo'>Notes</h1>
           <div className='flex gap-1 items-center'>
-            <Link href='/new'><Button variant='primary' className='flex items-center'><HiPencilAlt /></Button></Link>
-            <Button variant='outline-secondary' onClick={() => setShowModal(!showModal)}><BsFillTagsFill /></Button>
-            <Button variant='outline-secondary' className='xl:invisible xl:hidden' onClick={() => setExpandMenu(!expandMenu)}> <HiMenu />
+            <Link href='/new' aria-label='Create a new note'><Button variant='primary' className='flex items-center' aria-label='Create note'><HiPencilAlt /></Button></Link>
+            <Button variant='outline-secondary' onClick={() => setShowModal(!showModal)}><BsFillTagsFill role='button' aria-label='Modify tags' /></Button>
+            <Button variant='outline-secondary' className='xl:invisible xl:hidden' onClick={() => setExpandMenu(!expandMenu)} role='button' aria-label='Horizontal menu toggle'> <HiMenu />
             </Button>
           </div>
         </header>
@@ -127,17 +127,17 @@ const Sidebar = () => {
                     }}
                     placeholder='Search'
                     className='pl-8 border-0 border-b border-zinc-300 bg-transparent text-sm focus:border-indigo-600 focus:ring-0 hover:border-indigo-600 dark:border-zinc-600' />
-                  <CgSearch className='absolute bottom-0 left-0 transform translate-x-1/2 -translate-y-2.5 text-zinc-500' />
+                  <CgSearch className='absolute bottom-0 left-0 transform translate-x-1/2 -translate-y-2.5 text-zinc-500' aria-label='Search by note or ID' />
                 </label>
               </div>
             </div>
           </form>
-          <div className='mt-6 flex flex-col gap-2 grow'>
+          <div className='mt-6 flex flex-col-reverse justify-end gap-2 grow'>
             {
               isError ? <div> An error has occurred while fetching notes </div> :
                 isLoading ? <div>Loading... </div> :
                   filteredNotes ?
-                    filteredNotes.reverse().map(note => (
+                    filteredNotes.map(note => (
                       <div key={note._id} className='bg-white cursor-pointer rounded border border-zinc-300 transition hover:bg-zinc-100 hover:shadow-inner dark:bg-zinc-700 dark:border-zinc-600 dark:hover:bg-zinc-600'>
                         <NoteCard _id={note._id} title={note.title} markdown={note.markdown} tags={note.tags} />
                       </div>
