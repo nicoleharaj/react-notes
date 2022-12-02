@@ -7,6 +7,7 @@ import Button from './Button';
 import { NOTES_URL, TAGS_URL, CONTENT_TYPE } from '../constants';
 import CreatableReactSelect from 'react-select/creatable';
 import useTagList from '../hooks/useTagList';
+import useThemeStore from '../hooks/useThemeStore';
 
 const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: NoteFormProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
@@ -16,6 +17,41 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
   const [hasMounted, setHasMounted] = useState(false);
   const [selectedTags, setSelectedTags] = useState<TagProps[]>(tags);
   const { allTags } = useTagList();
+  const theme = useThemeStore().theme;
+
+  const multiStyle = {
+    control: (base: any, state: any) => ({
+      ...base,
+      padding: '2px',
+      height: '100%',
+      'input:focus': {
+        boxShadow: 'none',
+      },
+      backgroundColor: theme === 'dark' ? '#44403C' : '',
+      boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
+      borderColor: theme === 'dark' ? state.isFocused ? '#4f46e5' : 'transparent' : state.isFocused ? '#4f46e5' : '#D6D3D1',
+
+      '&:hover': {
+        borderColor: 'transparent'
+      }
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: theme === 'dark' ? state.isFocused ? '#44403C' : 'red' : state.isFocused ? '#e0e7ff' : 'green',
+      color: 'white',
+      '&:hover': {
+        backgroundColor: theme === 'dark' ? '#e0e7ff' : '#e0e7ff',
+      },
+    }),
+    input: (base: any) => ({
+      ...base,
+      display: 'block',
+      width: '100px',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+    })
+  };
 
   useEffect(() => {
     setHasMounted(true);
@@ -159,20 +195,21 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
               return { label: tag.label, value: tag._id };
             })}
             isMulti
+            styles={multiStyle}
           />
         </div>
       </div>
 
       <div className='grid gap-2'>
         <label htmlFor='markdown'>Body</label>
-        <textarea name='markdown' id='markdown' rows={35} ref={markdownRef} defaultValue={markdown} required className='border-stone-300 rounded bg-white dark:bg-stone-700 dark:border-stone-700 focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600'></textarea>
+        <textarea name='markdown' id='markdown' rows={10} ref={markdownRef} defaultValue={markdown} required className='border-stone-300 rounded bg-white dark:bg-stone-700 dark:border-stone-700 focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600'></textarea>
       </div>
 
       <div className='flex gap-2 justify-end'>
         <Button type='button' variant='outline-danger' onClick={() => router.back()}>Cancel</Button>
         <Button type='submit' variant='primary'>Save</Button>
       </div>
-    </form>
+    </form >
   );
 };
 
