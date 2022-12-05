@@ -36,27 +36,5 @@ const tagSchema = new mongoose.Schema({
   ],
 });
 
-noteSchema.pre('deleteOne', function (next) {
-  const noteId = this.getQuery()['_id'];
-  mongoose.model('Tag').deleteMany({ note: noteId }, function (e: any) {
-    if (e) {
-      console.error(e);
-      return next(e);
-    }
-    next();
-  });
-});
-
-tagSchema.pre('deleteOne', function (next) {
-  const tagId = this.getQuery()['_id'];
-  mongoose.model('Note').deleteMany({ tag: tagId }, function (e: any) {
-    if (e) {
-      console.error(e);
-      return next(e);
-    }
-    next();
-  });
-});
-
 export const Note = mongoose.models.Note || mongoose.model('Note', noteSchema);
 export const Tag = mongoose.models.Tag || mongoose.model('Tag', tagSchema);
