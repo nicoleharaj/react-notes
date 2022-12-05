@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.status(200).json({ success: true, data: note });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
     case 'PUT':
@@ -34,16 +34,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(200).json({ success: true, data: note });
       } catch (e: any) {
         console.error(e);
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
 
     case 'DELETE':
       try {
         const deletedNote = await Note.deleteOne({ _id: id });
-        res.status(200).json(deletedNote);
+        res.status(200).json({ success: true, data: deletedNote });
       } catch (e: any) {
-        res.status(400).json({ success: false });
+        res.status(400).json({ success: false, message: e });
       }
       break;
     default:
