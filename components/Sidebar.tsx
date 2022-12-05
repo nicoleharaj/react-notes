@@ -108,7 +108,7 @@ const Sidebar = () => {
           </Button>
         </div>
 
-        <form className='mt-2 y-2 flex flex-col items-center'>
+        <form className='mt-2 flex flex-col items-center'>
           {allTags?.map((tag) => (
             <div key={tag._id} className='flex justify-between items-center gap-5 p-1'>
               <input

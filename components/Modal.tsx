@@ -30,7 +30,7 @@ const Modal = ({
         dark:text-white'
         {...props}
       >
-        <div className={`m-auto flex-col gap-4 w-2/4 bg-white rounded-md shadow-lg p-10 z-50 dark:bg-zinc-700` + ' ' + className + ' xl:w-1/4'}>
+        <div className={`m-auto flex-col gap-4 w-fit bg-white rounded-md shadow-lg p-10 z-50 dark:bg-zinc-700` + ' ' + className}>
           {children}
         </div>
 
