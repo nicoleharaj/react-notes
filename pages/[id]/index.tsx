@@ -20,9 +20,9 @@ import useThemeStore from '../../hooks/useThemeStore';
 import Head from 'next/head';
 
 const customStyle = {
-  borderRadius: "0.5rem",
-  padding: "1.5rem",
-  backgroundColor: "transparent"
+  borderRadius: '0.5rem',
+  padding: '1.5rem',
+  backgroundColor: 'transparent'
 };
 
 const NotePage = ({ note }: any) => {
@@ -44,6 +44,7 @@ const NotePage = ({ note }: any) => {
     const options = { optimisticData: notes, rollbackOnError: true };
     mutate(NOTES_URL, notes, options);
   };
+
   return (
     <>
       <Head>
@@ -52,24 +53,55 @@ const NotePage = ({ note }: any) => {
       <Modal transitionIn={showModal} timeout={300} classNames='modal' onExit={() => setShowModal(!showModal)}>
         <h2 className='font-bold text-4xl text-center'>Delete note</h2>
         <p className='text-center'>Are you sure you want to delete this note?</p>
-        <div className="flex mt-4 gap-2 justify-center">
-          <Button variant="danger" onClick={onDeleteNote} role='button' aria-label='Delete note'>Delete</Button>
+        <div className='flex mt-4 gap-2 justify-center'>
+          <Button variant='danger' onClick={onDeleteNote} role='button' aria-label='Delete note'>Delete</Button>
           <Button variant='secondary' role='button' onClick={() => {
             setShowModal(!showModal);
           }}>Cancel</Button>
         </div>
       </Modal>
 
-      <div className='container'>
-        <header className='flex justify-between mb-1'>
-          <h1 className='text-2xl font-semibold text-zinc-900 dark:text-white'>{note.title}</h1>
-          <div className='flex gap-1'>
-            <Link href={'/[id]/edit'} as={`/${note._id}/edit`} aria-label='Edit note'><Button variant='outline-primary' aria-label='Edit note'><BsFillPencilFill /></Button></Link>
-            <Button variant='outline-danger' onClick={() => setShowModal(!showModal)} aria-label='Delete note'><BsFillTrashFill /></Button>
+      <div className='container mx-auto'>
+        <header className='flex flex-col'>
+          <div className='flex justify-between mb-1 gap-1'>
+            <h1 className='text-2xl font-semibold text-zinc-900 dark:text-white'>{note.title}</h1>
+            <div className='flex gap-1'>
+              <Link
+                href={'/[id]/edit'}
+                as={`/${note._id}/edit`}>
+                <Button
+                  variant='outline-primary'
+                  aria-label='Edit note'>
+                  <span className='sr-only'>Edit note</span>
+                  <BsFillPencilFill aria-hidden />
+                </Button>
+              </Link>
+              <Button
+                variant='outline-danger'
+                onClick={() => setShowModal(!showModal)}
+                aria-label='Delete note'>
+                <span className='sr-only'>Delete note</span>
+                <BsFillTrashFill aria-hidden />
+              </Button>
+            </div>
           </div>
         </header>
 
-        <article className="mt-6 mx-auto prose prose-pre:bg-stone-100 prose-pre:border prose-pre:rounded-lg prose-headings:mt-5 prose-headings:mb-3 md:prose-lg dark:prose-invert dark:prose-pre:bg-stone-800 dark:prose-pre:border-stone-600">
+        <article
+          className='
+            mt-2 
+            mx-auto 
+            prose 
+            prose-pre:bg-stone-100 
+            prose-pre:border 
+            prose-pre:rounded-lg 
+            prose-headings:mt-5 
+            prose-headings:mb-3 
+            md:prose-lg 
+            dark:prose-invert 
+            dark:prose-pre:bg-stone-800 
+            dark:prose-pre:border-stone-600'
+        >
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
             code({ node, inline, className, style, children, ...props }: CodeProps) {
               const match = /language-(\w+)/.exec(className || '');

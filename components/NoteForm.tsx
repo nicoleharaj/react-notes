@@ -27,20 +27,39 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
       'input:focus': {
         boxShadow: 'none',
       },
-      backgroundColor: theme === 'dark' ? '#44403C' : '',
+      backgroundColor: theme === 'dark' ? '#3F3F46' : 'white',
       boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
       borderColor: theme === 'dark' ? state.isFocused ? '#4f46e5' : 'transparent' : state.isFocused ? '#4f46e5' : '#D6D3D1',
 
       '&:hover': {
-        borderColor: 'transparent'
+        borderColor: '#4f46e5'
       }
     }),
+
+    multiValueLabel: (base: any, state: any) => ({
+      ...base,
+      color: theme === 'dark' ? 'white' : '#1C1917',
+    }),
+
+    multiValue: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: theme === 'dark' ? '#292524' : '#E6E6E6',
+      color: theme === 'dark' ? '' : '#1C1917',
+    }),
+
+    menu: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: theme === 'dark' ? '#2F2B27' : 'white',
+      borderRadius: '.5rem',
+      overflow: 'hidden',
+    }),
+
     option: (base: any, state: any) => ({
       ...base,
-      backgroundColor: theme === 'dark' ? state.isFocused ? '#44403C' : 'red' : state.isFocused ? '#e0e7ff' : 'green',
-      color: 'white',
+      backgroundColor: theme === 'dark' ? state.isFocused ? '#4f46e5' : 'inherit' : state.isFocused ? '#a5b4fc' : 'inherit',
+      color: theme === 'dark' ? 'white' : '#1D1918',
       '&:hover': {
-        backgroundColor: theme === 'dark' ? '#e0e7ff' : '#e0e7ff',
+        backgroundColor: theme === 'dark' ? '#3730a3' : '#e0e7ff',
       },
     }),
     input: (base: any) => ({
@@ -155,6 +174,7 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     const data = {
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
@@ -179,7 +199,22 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
       <div className='flex justify-between gap-2 '>
         <div className='grid gap-2 flex-grow'>
           <label htmlFor='title'>Title</label>
-          <input type='text' id='title' ref={titleRef} defaultValue={title} required className='border-stone-300 rounded bg-white dark:bg-stone-700 dark:border-stone-700 focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600' />
+          <input
+            type='text'
+            id='title'
+            ref={titleRef}
+            defaultValue={title}
+            required
+            className='
+            border-zinc-300 
+              rounded 
+            bg-white 
+            dark:bg-zinc-700 
+            dark:border-zinc-700 
+            focus:border-indigo-600 
+            focus:ring-indigo-600 
+            hover:border-indigo-600'
+          />
         </div>
         <div className='grid gap-2 flex-grow'>
           <label htmlFor='tags'>Tags</label>
@@ -202,7 +237,23 @@ const NoteForm = ({ title = '', markdown = '', forNewNote = true, tags = [] }: N
 
       <div className='grid gap-2'>
         <label htmlFor='markdown'>Body</label>
-        <textarea name='markdown' id='markdown' rows={10} ref={markdownRef} defaultValue={markdown} required className='border-stone-300 rounded bg-white dark:bg-stone-700 dark:border-stone-700 focus:border-indigo-600 focus:ring-indigo-600 hover:border-indigo-600'></textarea>
+        <textarea
+          name='markdown'
+          id='markdown'
+          rows={10}
+          ref={markdownRef}
+          defaultValue={markdown}
+          required
+          className='
+          border-zinc-300 
+            rounded 
+          bg-white 
+          dark:bg-zinc-700 
+          dark:border-zinc-700
+          focus:border-indigo-600 
+          focus:ring-indigo-600 
+          hover:border-indigo-600'
+        ></textarea>
       </div>
 
       <div className='flex gap-2 justify-end'>

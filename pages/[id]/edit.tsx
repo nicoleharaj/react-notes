@@ -10,7 +10,7 @@ const Edit = ({ note }: any) => {
       <Head>
         <title>Edit - {note.title} - Notes</title>
       </Head>
-      <div className='w-full'>
+      <div className='container mx-auto w-full'>
         <header className='mb-6'>
           <h1 className='text-2xl font-semibold'>Edit note</h1>
         </header>

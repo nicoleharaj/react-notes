@@ -7,7 +7,7 @@ const NewNote = () => {
       <Head>
         <title>Create a new note - Notes</title>
       </Head>
-      <div className='container text-stone-900 transition dark:text-white'>
+      <div className='container mx-auto text-stone-900 transition dark:text-white'>
         <header className='mb-6'>
           <h1 className='text-2xl font-semibold'>New note</h1>
         </header>
