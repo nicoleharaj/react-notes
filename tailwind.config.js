@@ -12,7 +12,7 @@ const disabledCss = {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}', './app/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
@@ -22,9 +22,6 @@ module.exports = {
         'lg': { css: disabledCss },
         'xl': { css: disabledCss },
         '2xl': { css: disabledCss },
-      },
-      transitionTimingFunction: {
-        'in-expo': 'cubic-bezier(0.53, -0.03, 0.43, 0.84)',
       },
     },
   },
