@@ -91,7 +91,7 @@ const NotePage = ({ note }: any) => {
           className='
             mt-2 
             mx-auto 
-            prose 
+            prose
             prose-pre:bg-stone-100 
             prose-pre:border 
             prose-pre:rounded-lg 

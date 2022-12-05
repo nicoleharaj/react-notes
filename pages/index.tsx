@@ -9,7 +9,7 @@ export default function Home() {
       </Head>
 
       <div className='flex justify-center items-center w-full h-full'>
-        <h2 className='w-96 text-4xl select-none text-zinc-300 text-center dark:text-zinc-600'>Please open or create a new note.</h2>
+        <h2 className='w-96 text-4xl select-none text-zinc-300 text-center dark:text-zinc-600' aria-hidden>Please open or create a new note.</h2>
       </div>
 
     </>
