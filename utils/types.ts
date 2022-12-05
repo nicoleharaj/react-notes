@@ -21,6 +21,8 @@ export type NoteData = {
   title: string;
   markdown: string;
   tags: TagProps[];
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type NoteFormProps = {
